@@ -12,7 +12,7 @@
 </head>
 <body>
     <h1>Fetched Data</h1>
-    {% if data %}
+    {% if data and data|length > 0 and data[0] is mapping %}
         <table>
             <thead>
                 <tr>
@@ -32,7 +32,7 @@
             </tbody>
         </table>
     {% else %}
-        <p>No data available.</p>
+        <p>No data available or API error.</p>
     {% endif %}
 </body>
 </html>
