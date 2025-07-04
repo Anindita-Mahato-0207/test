@@ -1,28 +1,14 @@
-from flask import Flask, render_template
-import mysql.connector
+from flask import Flask, render_template  # Added render_template import
+import requests
 
-app = Flask(__name__)
+app = Flask(__name__)  # Initialize Flask app
 
-# MySQL remote DB config
-DB_CONFIG = {
-    'host': 'your-remote-host.com',
-    'user': 'your_username',
-    'password': 'your_password',
-    'port': 3306
-}
-
-@app.route('/show-databases')
-def show_databases():
-    try:
-        connection = mysql.connector.connect(**DB_CONFIG)
-        cursor = connection.cursor()
-        cursor.execute("SHOW DATABASES")
-        db_list = [row[0] for row in cursor.fetchall()]
-        cursor.close()
-        connection.close()
-        return render_template("databases.html", databases=db_list)
-    except Exception as e:
-        return f"<h3>Error connecting to database: {str(e)}</h3>", 500
-
-if __name__ == '__main__':
-    app.run()
+@app.route('/get-data')
+def get_data():
+    response = requests.get('https://interview.travarsa.net/test.php')
+    
+    if response.status_code == 200:
+        data = response.json()
+        return render_template('databases.html', data=data)  # Pass data to template
+    else:
+        return "Failed to fetch data from cPanel API", 500
